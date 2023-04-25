@@ -46,13 +46,13 @@ knowledge(X2,Y2, possibleWumpus) :- not knowledge(X2,Y2,pit), not knowledge(X2,Y
 knowledge(X2,Y2, possibleWumpus) :- not knowledge(X2,Y2,pit), not knowledge(X2,Y2,wumpus), not knowledge(X2,Y2,safe), knowledge(X1, Y1, stench), X2=X1, Y2=Y1-1, Y1!=0.
 
 %wumpus from knowledge when X is not 0 and y not 0
-knowledge(X,Y, wumpus) :- knowledge(X1, Y, stench),knowledge(X2, Y, stench), knowledge(X, Y1, stench), knowledge(X, Y2, stench), X!=0, Y!=0, X1=X-1, X2=X+1, Y1=Y-1, Y2=Y+1.
+knowledge(X,Y, wumpus) :- knowledge(X1, Y, stench), knowledge(X2, Y, stench), knowledge(X, Y1, stench), knowledge(X, Y2, stench), X!=0, Y!=0, X1=X-1, X2=X+1, Y1=Y-1, Y2=Y+1.
 
 %wumpus from knowledge when X is 0 and y not 0
 knowledge(X,Y, wumpus) :- knowledge(X2, Y, stench), knowledge(X, Y1, stench), knowledge(X, Y2, stench), X=0, Y!=0, X2=X+1, Y1=Y-1, Y2=Y+1.
 
 %wumpus from knowledge when X is not 0 and y is 0
-knowledge(X,Y, wumpus) :- knowledge(X1, Y, stench),knowledge(X2, Y, stench), knowledge(X, Y2, stench), X!=0, Y=0, X1=X-1, X2=X+1, Y2=Y+1.
+knowledge(X,Y, wumpus) :- knowledge(X1, Y, stench), knowledge(X2, Y, stench), knowledge(X, Y2, stench), X!=0, Y=0, X1=X-1, X2=X+1, Y2=Y+1.
 
 %wumpus from knowledge when X is 0 and y is 0
 knowledge(X,Y, wumpus) :- knowledge(X2, Y, stench), knowledge(X, Y2, stench), X=0, Y=0, X2=X+1, Y2=Y+1.
@@ -60,13 +60,22 @@ knowledge(X,Y, wumpus) :- knowledge(X2, Y, stench), knowledge(X, Y2, stench), X=
 
 
 %pit from knowledge when X is not 0 and y not 0
-knowledge(X,Y, pit) :- knowledge(X1, Y, breeze),knowledge(X2, Y, breeze), knowledge(X, Y1, breeze), knowledge(X, Y2, breeze), X!=0, Y!=0, X1=X-1, X2=X+1, Y1=Y-1, Y2=Y+1.
+knowledge(X,Y, pit) :- knowledge(X1, Y, breeze), knowledge(X2, Y, breeze), knowledge(X, Y1, breeze), knowledge(X, Y2, breeze), X!=0, Y!=0, X1=X-1, X2=X+1, Y1=Y-1, Y2=Y+1.
 
 %pit from knowledge when X is 0 and y not 0
 knowledge(X,Y, pit) :- knowledge(X2, Y, breeze), knowledge(X, Y1, breeze), knowledge(X, Y2, breeze), X=0, Y!=0, X2=X+1, Y1=Y-1, Y2=Y+1.
 
 %pit from knowledge when X is not 0 and y is 0
-knowledge(X,Y, pit) :- knowledge(X1, Y, breeze),knowledge(X2, Y, breeze), knowledge(X, Y2, breeze), X!=0, Y=0, X1=X-1, X2=X+1, Y2=Y+1.
+knowledge(X,Y, pit) :- knowledge(X1, Y, breeze), knowledge(X2, Y, breeze), knowledge(X, Y2, breeze), X!=0, Y=0, X1=X-1, X2=X+1, Y2=Y+1.
 
 %pit from knowledge when X is 0 and y is 0
 knowledge(X,Y, pit) :- knowledge(X2, Y, breeze), knowledge(X, Y2, breeze), X=0, Y=0, X2=X+1, Y2=Y+1.
+
+
+hero(2,0).
+
+%we have stench in our cell so we shoot on the above cell in order to convert it from possible wumpus to safe, if we are forced (no safe cells).
+at_least_one_safe :- knowledge(X,Y,safe).
+shoot(up) :- hero(X,Y), knowledge(X, Y, stench), Y1=Y-1, Y!=0, not at_least_one_safe.
+knowledge(X, Y1, safe) :-  hero(X,Y), Y1=Y-1, Y!=0, shoot(up).
+
